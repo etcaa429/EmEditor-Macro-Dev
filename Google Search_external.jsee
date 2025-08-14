@@ -1,0 +1,62 @@
+// 聲明變量
+var sText;
+var sUrl;
+var shell;
+var doc;
+var bSuccess = false;
+
+// 獲取當前文檔對象
+doc = document;
+
+// 檢查文檔對象是否有效
+if (doc != null) {
+    // 嘗試從選取區獲取文字
+    if (doc.selection != null && doc.selection.Text.length > 0) {
+        sText = doc.selection.Text;
+        bSuccess = true;
+    }
+}
+
+// 如果選取區沒有文字，則嘗試從剪貼簿獲取
+// 這裡假設 clipboardData.getData 是 EmEditor 內建功能且不會報錯
+if (!bSuccess) {
+    if (typeof clipboardData !== 'undefined' && clipboardData != null) {
+        sText = clipboardData.getData("Text");
+        if (sText != null && sText.length > 0) {
+            bSuccess = true;
+        }
+    }
+}
+
+// 最終檢查是否有有效內容
+if (sText == null || sText.length === 0) {
+    bSuccess = false;
+}
+
+// 如果有有效內容，則繼續執行
+if (bSuccess) {
+    // 對內容進行 URL 編碼並構建 Google 搜索鏈接
+    sText = encodeURIComponent(sText);
+    sUrl = "https://www.google.com/search?q=" + sText;
+
+    // 嘗試用 EmEditor 內建方法開啟瀏覽器
+    var bShellExecuteSuccess = false;
+    if (doc != null && doc.shellExecute != null) {
+        doc.shellExecute(sUrl);
+        bShellExecuteSuccess = true;
+    }
+
+    // 如果 EmEditor 內建方法失敗，退回到 WScript.Shell
+    if (!bShellExecuteSuccess) {
+        shell = new ActiveXObject("WScript.Shell");
+        if (shell != null) {
+            shell.Run(sUrl, 1, false);
+        }
+    }
+}
+
+// 清理對像
+shell = null;
+doc = null;
+
+// 腳本結束

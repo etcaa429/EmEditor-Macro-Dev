@@ -1,0 +1,74 @@
+/*
+ * Google Search Selected Text Macro (JScript/ECMA v2)
+ * ---------------------------------------------------
+ * 功能：
+ *   將目前選中的文字直接以 Google 搜尋。
+ *   本腳本設計用於支援 ActiveXObject 的 Windows 環境 (如 IE、Word、Excel、VBA 巨集等)。
+ *
+ * 使用方式：
+ *   - 選取文件中欲查詢的文字。
+ *   - 執行本巨集，將自動開啟預設瀏覽器並進行 Google 搜尋。
+ *
+ * 結構說明：
+ *   1. 聲明腳本所需變量。
+ *   2. 取得當前文件的 document 物件。
+ *   3. 檢查 document 是否有效，以及有無選取文字。
+ *   4. 取得選取文字並進行 URL 編碼，組合 Google 搜尋網址。
+ *   5. 利用 WScript.Shell 物件開啟搜尋網址，不顯示提示視窗。
+ *   6. 結束前清理資源。
+ *
+ * 注意事項：
+ *   - 僅能在支援 ActiveXObject 的 Windows 環境運行。
+ *   - 需允許腳本存取 WScript.Shell。
+ *   - 適用於 ECMA Script v2/JScript 傳統語法，不支援現代瀏覽器。
+ *
+ * @author  etcaa429
+ * @date    2025-08-14
+ * @version 1.0
+ */
+
+// 聲明變量
+var sText;
+var sUrl;
+var shell;
+var doc;
+var bSuccess = true;
+
+// 獲取當前文檔對像
+doc = document;
+
+// 檢查文檔對象是否有效
+if( doc == null ) {
+    bSuccess = false;
+}
+
+// 檢查是否有選中的文本
+if( bSuccess && doc.selection.Text.length <= 0 ) {
+    bSuccess = false;
+}
+
+// 處理選中的文本
+if( bSuccess ) {
+    // 獲取選中的文本並進行URL編碼
+    sText = encodeURIComponent( doc.selection.Text );
+    
+    // 構建Google搜索URL
+    sUrl = "https://www.google.com/search?q=" + sText;
+    
+    // 嘗試創建WScript.Shell對像
+    shell = new ActiveXObject("WScript.Shell");
+    if( shell == null ) {
+        bSuccess = false;
+    }
+}
+
+// 執行搜索
+if( bSuccess ) {
+    // 使用默認瀏覽器打開搜索URL
+    // 不顯示任何提示窗口
+    shell.Run(sUrl, 1, false);
+}
+
+// 清理對像
+shell = null;
+doc = null;
