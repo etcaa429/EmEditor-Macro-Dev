@@ -1,0 +1,53 @@
+# EmEditor Macro Development - .gitignore
+
+# Windows/EmEditor specific files
+*.bak
+*.tmp
+*.~*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# EmEditor Macro files that should not be tracked
+*.elog
+*.embackup
+*.emeditorbackup
+
+# Compiled source code, DLLs, executable files
+*.exe
+*.dll
+*.obj
+*.lib
+*.pdb
+
+# Log files
+*.log
+
+# VS Code/IDE files
+.vscode/
+.idea/
+*.suo
+*.user
+*.ncb
+*.opendb
+*.VC.db
+
+# Node.js dependencies (if any macros/scripts use Node)
+node_modules/
+
+# Python cache (if any macros/scripts use Python)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Miscellaneous
+*.DS_Store
+*.swp
+*.swo
+
+# Ignore test output, coverage reports, etc.
+coverage/
+dist/
+build/
+out/
